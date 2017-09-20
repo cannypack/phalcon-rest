@@ -6,7 +6,6 @@ use Phalcon\Mvc\Micro;
 use Phalcon\Mvc\Micro\MiddlewareInterface;
 use PhalconRest\Api;
 use PhalconRest\Constants\ErrorCodes;
-use PhalconRest\Exception;
 use PhalconRest\Mvc\Plugin;
 
 class NotFoundMiddleware extends Plugin implements MiddlewareInterface

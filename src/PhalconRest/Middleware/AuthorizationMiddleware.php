@@ -9,7 +9,6 @@ use Phalcon\Mvc\Micro\MiddlewareInterface;
 use Phalcon\Mvc\User\Plugin;
 use PhalconRest\Api;
 use PhalconRest\Constants\ErrorCodes;
-use PhalconRest\Exception;
 
 class AuthorizationMiddleware extends Plugin implements MiddlewareInterface
 {

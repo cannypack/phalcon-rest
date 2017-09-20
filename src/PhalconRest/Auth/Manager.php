@@ -3,7 +3,6 @@
 namespace PhalconRest\Auth;
 
 use PhalconRest\Constants\ErrorCodes;
-use PhalconRest\Exception;
 
 class Manager extends \PhalconRest\Mvc\Plugin
 {

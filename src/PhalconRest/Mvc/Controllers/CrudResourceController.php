@@ -1,4 +1,5 @@
 <?php
+
 namespace PhalconRest\Mvc\Controllers;
 
 use Phalcon\Mvc\Model;
@@ -7,7 +8,7 @@ use PhalconRest\Constants\ErrorCodes;
 use PhalconRest\Constants\PostedDataMethods;
 use PhalconRest\Exception;
 
-class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceController
+class CrudResourceController extends ResourceController
 {
     /*** ALL ***/
 
@@ -54,11 +55,11 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
         return $phqlBuilder->getQuery()->execute();
     }
 
-    protected function modifyReadQuery(QueryBuilder $query)
+    protected function modifyReadQuery(QueryBuilder &$query)
     {
     }
 
-    protected function modifyAllQuery(QueryBuilder $query)
+    protected function modifyAllQuery(QueryBuilder &$query)
     {
     }
 
@@ -142,7 +143,7 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
         return $this->getResource()->getModelPrimaryKey();
     }
 
-    protected function modifyFindQuery(QueryBuilder $query, $id)
+    protected function modifyFindQuery(QueryBuilder &$query, $id)
     {
     }
 
@@ -280,6 +281,9 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
     {
         $result = [];
 
+        // Reset sent createdAt and modifiedAt
+        unset($data['createdAt'], $data['modifiedAt']);
+
         foreach ($data as $key => $value) {
             $result[$key] = $this->transformPostDataValue($key, $value, $data);
         }
@@ -323,12 +327,13 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
         $success = $item->create();
 
         if ($success) {
-
             $this->afterCreate($item);
             $this->afterSave($item);
-        }
 
-        return $success ? $item : null;
+            return $item;
+        } else {
+            throw new Exception(ErrorCodes::DATA_FAILED, $item->getMessages()[0]);
+        }
     }
 
     protected function beforeAssignData(Model $item, $data)
@@ -378,7 +383,7 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
         return $this->createResourceOkResponse($createdItem);
     }
 
-    protected function afterHandleCreate(Model $createdItem, $data, $response)
+    protected function afterHandleCreate(Model $createdItem, $data, &$response)
     {
     }
 
@@ -445,7 +450,12 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
     protected function getItem($id)
     {
         $modelClass = $this->getResource()->getModel();
-        return $modelClass::findFirst($id);
+        return $modelClass::findFirst([
+                'conditions' => 'id = :id:',
+                'bind' => [
+                    'id' => $id
+                ]
+            ]);
     }
 
     protected function updateAllowed(Model $item, $data)
@@ -487,12 +497,13 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
         $success = $item->update();
 
         if ($success) {
-
             $this->afterUpdate($item);
             $this->afterSave($item);
-        }
 
-        return $success ? $item : null;
+            return $item;
+        } else {
+            throw new Exception(ErrorCodes::DATA_FAILED, $item->getMessages()[0]);
+        }
     }
 
     protected function beforeUpdate(Model $item)
@@ -517,7 +528,7 @@ class CrudResourceController extends \PhalconRest\Mvc\Controllers\ResourceContro
         return $this->createResourceOkResponse($updatedItem);
     }
 
-    protected function afterHandleUpdate(Model $updatedItem, $data, $response)
+    protected function afterHandleUpdate(Model $updatedItem, $data, &$response)
     {
     }
 

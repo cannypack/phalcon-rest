@@ -15,6 +15,8 @@ class ErrorCodes
     const AUTH_TOKEN_INVALID = 2030;
     const AUTH_SESSION_EXPIRED = 2040;
     const AUTH_SESSION_INVALID = 2050;
+    const AUTH_LOGIN_BLOCKED = 2060;
+    const AUTH_LOGIN_INACTIVE = 2070;
 
     // Access Control
     const ACCESS_DENIED = 3010;

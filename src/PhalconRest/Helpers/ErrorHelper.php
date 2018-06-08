@@ -40,6 +40,16 @@ class ErrorHelper
             'message' => 'Authentication: Login Failed'
         ],
 
+        ErrorCodes::AUTH_LOGIN_BLOCKED => [
+            'statusCode' => 401,
+            'message' => 'Authentication: Your account has been blocked due to exceeding the maximum number of login attempts'
+        ],
+
+        ErrorCodes::AUTH_LOGIN_INACTIVE => [
+            'statusCode' => 401,
+            'message' => 'Authentication: Your account is not active'
+        ],
+
         ErrorCodes::AUTH_SESSION_EXPIRED => [
             'statusCode' => 401,
             'message' => 'Authentication: Session Expired'

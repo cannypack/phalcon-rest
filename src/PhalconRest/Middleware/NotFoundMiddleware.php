@@ -12,7 +12,7 @@ class NotFoundMiddleware extends Plugin implements MiddlewareInterface
 {
     public function beforeNotFound()
     {
-        throw new Exception(ErrorCodes::GENERAL_NOT_FOUND);
+        throw new Exception(ErrorCodes::GENERAL_NOT_FOUND, null, null, null, false);
     }
 
     public function call(Micro $api) {

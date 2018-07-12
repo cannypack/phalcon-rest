@@ -25,7 +25,7 @@ class AuthorizationMiddleware extends Plugin implements MiddlewareInterface
             $endpoint->getIdentifier());
 
         if (!$allowed) {
-            throw new Exception(ErrorCodes::ACCESS_DENIED);
+            throw new Exception(ErrorCodes::ACCESS_DENIED, null, null, null, false);
         }
     }
 

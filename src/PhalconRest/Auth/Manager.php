@@ -118,7 +118,7 @@ class Manager extends \PhalconRest\Mvc\Plugin
 
         if (!$identity) {
 
-            throw new Exception(ErrorCodes::AUTH_LOGIN_FAILED);
+            throw new Exception(ErrorCodes::AUTH_LOGIN_FAILED, null, null, null, false);
         }
 
         $startTime = time();

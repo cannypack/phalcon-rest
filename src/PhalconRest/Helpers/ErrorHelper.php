@@ -50,6 +50,11 @@ class ErrorHelper
             'message' => 'Authentication: Your account is not active'
         ],
 
+        ErrorCodes::AUTH_LOGIN_REJECTED => [
+            'statusCode' => 401,
+            'message' => 'Authentication: Login Rejected'
+        ],
+
         ErrorCodes::AUTH_SESSION_EXPIRED => [
             'statusCode' => 401,
             'message' => 'Authentication: Session Expired'

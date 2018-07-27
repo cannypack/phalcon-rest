@@ -129,6 +129,8 @@ class Manager extends \PhalconRest\Mvc\Plugin
 
         $this->session = $session;
 
+        $account->saveToken($identity, $token, $session->getExpirationTime());
+
         return $this->session;
     }
 
@@ -183,6 +185,11 @@ class Manager extends \PhalconRest\Mvc\Plugin
         if (!$account->authenticate($session->getIdentity())) {
 
             throw new Exception(ErrorCodes::AUTH_TOKEN_INVALID);
+        }
+
+        if (!$account->authenticateToken($session->getIdentity(), $session->getToken())) {
+
+            throw new Exception(ErrorCodes::AUTH_SESSION_INVALID);
         }
 
         return $this->session = $session;

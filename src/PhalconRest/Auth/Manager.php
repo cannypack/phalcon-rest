@@ -162,7 +162,7 @@ class Manager extends \PhalconRest\Mvc\Plugin
             $session = $this->tokenParser->getSession($token);
         } catch (\Exception $e) {
 
-            throw new Exception(ErrorCodes::AUTH_TOKEN_INVALID);
+            throw new Exception(ErrorCodes::AUTH_TOKEN_INVALID, null, null, null, false);
         }
 
         if (!$session) {
@@ -171,7 +171,7 @@ class Manager extends \PhalconRest\Mvc\Plugin
 
         if ($session->getExpirationTime() < time()) {
 
-            throw new Exception(ErrorCodes::AUTH_SESSION_EXPIRED);
+            throw new Exception(ErrorCodes::AUTH_SESSION_EXPIRED, null, null, null, false);
         }
 
         $session->setToken($token);
@@ -179,17 +179,17 @@ class Manager extends \PhalconRest\Mvc\Plugin
         // Authenticate identity
         if (!$account = $this->getAccountType($session->getAccountTypeName())) {
 
-            throw new Exception(ErrorCodes::AUTH_SESSION_INVALID);
+            throw new Exception(ErrorCodes::AUTH_SESSION_INVALID, null, null, null, false);
         }
 
         if (!$account->authenticate($session->getIdentity())) {
 
-            throw new Exception(ErrorCodes::AUTH_TOKEN_INVALID);
+            throw new Exception(ErrorCodes::AUTH_TOKEN_INVALID, null, null, null, false);
         }
 
         if (!$account->authenticateToken($session->getIdentity(), $session->getToken())) {
 
-            throw new Exception(ErrorCodes::AUTH_SESSION_INVALID);
+            throw new Exception(ErrorCodes::AUTH_SESSION_INVALID, null, null, null, false);
         }
 
         return $this->session = $session;

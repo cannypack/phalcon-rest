@@ -55,6 +55,11 @@ class ErrorHelper
             'message' => 'Authentication: Login Rejected'
         ],
 
+        ErrorCodes::AUTH_LOGIN_TOTP_REQUIRED => [
+            'statusCode' => 202,
+            'message' => 'Authentication: TOTP is required'
+        ],
+
         ErrorCodes::AUTH_SESSION_EXPIRED => [
             'statusCode' => 401,
             'message' => 'Authentication: Session Expired'

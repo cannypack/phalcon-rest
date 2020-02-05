@@ -18,6 +18,7 @@ class ErrorCodes
     const AUTH_LOGIN_BLOCKED = 2060;
     const AUTH_LOGIN_INACTIVE = 2070;
     const AUTH_LOGIN_REJECTED = 2080;
+    const AUTH_LOGIN_TOTP_REQUIRED = 2090;
 
     // Access Control
     const ACCESS_DENIED = 3010;

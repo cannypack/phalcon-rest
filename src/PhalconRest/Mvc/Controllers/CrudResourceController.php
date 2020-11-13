@@ -327,7 +327,7 @@ class CrudResourceController extends ResourceController
         try {
             $success = $item->create();
         } catch (\PDOException $e) {
-            throw $this->handlePDOException($e);
+            $this->handlePDOException($e);
         }
 
         if ($success) {
@@ -501,7 +501,7 @@ class CrudResourceController extends ResourceController
         try {
             $success = $item->update();
         } catch (\PDOException $e) {
-            throw $this->handlePDOException($e);
+            $this->handlePDOException($e);
         }
 
         if ($success) {
@@ -654,16 +654,16 @@ class CrudResourceController extends ResourceController
                     break;
 
                 default:
-                    return $exception;
+                    throw $exception;
             }
 
             if (!empty($additionalInfo)) {
                 $msg .= ' (' . $additionalInfo . ')';
             }
 
-            return new Exception(ErrorCodes::DATA_FAILED, $msg, null, null, false);
+            throw new Exception(ErrorCodes::DATA_FAILED, $msg, null, null, false);
         }
 
-        return $exception;
+        throw $exception;
     }
 }

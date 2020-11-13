@@ -326,13 +326,8 @@ class CrudResourceController extends ResourceController
 
         try {
             $success = $item->create();
-        } catch (\Exception $e) {
-            // Handle PDOErrors separately
-            if ($e instanceOf \PDOException) {
-                throw $this->handlePDOException($e);
-            }
-
-            throw $e;
+        } catch (\PDOException $e) {
+            throw $this->handlePDOException($e);
         }
 
         if ($success) {
@@ -505,14 +500,8 @@ class CrudResourceController extends ResourceController
 
         try {
             $success = $item->update();
-
-        } catch (\Exception $exception) {
-            // Handle PDOErrors separately
-            if ($exception instanceOf \PDOException) {
-                return $this->handlePDOException($exception);
-            }
-
-            throw $exception;
+        } catch (\PDOException $e) {
+            throw $this->handlePDOException($e);
         }
 
         if ($success) {

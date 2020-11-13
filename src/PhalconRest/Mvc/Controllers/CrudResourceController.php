@@ -638,7 +638,7 @@ class CrudResourceController extends ResourceController
 
     /*** Helper handlers ***/
 
-    protected function handlePDOException(\PDOException $exception)
+    protected function handlePDOException(\PDOException $exception, $additionalInfo = null)
     {
         // In case of 'Integrity constraint violation'
         if ($exception->getCode() == 23000) {
@@ -666,6 +666,10 @@ class CrudResourceController extends ResourceController
 
                 default:
                     return $exception;
+            }
+
+            if (!empty($additionalInfo)) {
+                $msg .= ' (' . $additionalInfo . ')';
             }
 
             return new Exception(ErrorCodes::DATA_FAILED, $msg, null, null, false);

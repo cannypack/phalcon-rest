@@ -648,7 +648,7 @@ class CrudResourceController extends ResourceController
                 case '1452':
                     $msg = preg_replace(
                         '/.* FOREIGN KEY \(`([^`]+)`\).*/',
-                        'Record referenced by filed \'\1\' does not exists',
+                        'Record referenced by field \'\1\' does not exists',
                         $msg
                     );
                     break;

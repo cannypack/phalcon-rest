@@ -324,7 +324,11 @@ class CrudResourceController extends ResourceController
         $this->beforeSave($item);
         $this->beforeCreate($item);
 
-        $success = $item->create();
+        try {
+            $success = $item->create();
+        } catch (\PDOException $e) {
+            $this->handlePDOException($e);
+        }
 
         if ($success) {
             $this->afterCreate($item);
@@ -332,7 +336,7 @@ class CrudResourceController extends ResourceController
 
             return $item;
         } else {
-            throw new Exception(ErrorCodes::DATA_FAILED, $item->getMessages()[0]);
+            throw new Exception(ErrorCodes::DATA_FAILED, $item->getMessages()[0], null, null, false);
         }
     }
 
@@ -494,7 +498,11 @@ class CrudResourceController extends ResourceController
         $this->beforeSave($item);
         $this->beforeUpdate($item);
 
-        $success = $item->update();
+        try {
+            $success = $item->update();
+        } catch (\PDOException $e) {
+            $this->handlePDOException($e);
+        }
 
         if ($success) {
             $this->afterUpdate($item);
@@ -502,7 +510,7 @@ class CrudResourceController extends ResourceController
 
             return $item;
         } else {
-            throw new Exception(ErrorCodes::DATA_FAILED, $item->getMessages()[0]);
+            throw new Exception(ErrorCodes::DATA_FAILED, $item->getMessages()[0], null, null, false);
         }
     }
 
@@ -615,5 +623,47 @@ class CrudResourceController extends ResourceController
 
     protected function afterHandleRemove(Model $removedItem, $response)
     {
+    }
+
+    /*** Helper handlers ***/
+
+    protected function handlePDOException(\PDOException $exception, $additionalInfo = null)
+    {
+        // In case of 'Integrity constraint violation'
+        if ($exception->getCode() == 23000) {
+            $msg = $exception->getMessage();
+            $code = preg_replace('/.*: ([0-9]+).*/', '\1', $msg);
+
+            switch ($code) {
+                // Duplicate entry
+                case '1062':
+                    $msg = preg_replace(
+                        '/.* Duplicate entry \'(.+)\' for key \'(.*)\'.*/',
+                        'Duplicate entry \'\1\' for field \'\2\'',
+                        $msg
+                    );
+                    break;
+
+                // Cannot add or update a child row: a foreign key constraint fails
+                case '1452':
+                    $msg = preg_replace(
+                        '/.* FOREIGN KEY \(`([^`]+)`\).*/',
+                        'Record referenced by field \'\1\' does not exists',
+                        $msg
+                    );
+                    break;
+
+                default:
+                    throw $exception;
+            }
+
+            if (!empty($additionalInfo)) {
+                $msg .= ' (' . $additionalInfo . ')';
+            }
+
+            throw new Exception(ErrorCodes::DATA_FAILED, $msg, null, null, false);
+        }
+
+        throw $exception;
     }
 }

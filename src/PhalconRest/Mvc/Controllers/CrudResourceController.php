@@ -70,7 +70,7 @@ class CrudResourceController extends ResourceController
 
     protected function onNotAllowed()
     {
-        throw new Exception(ErrorCodes::ACCESS_DENIED, 'Operation is not allowed');
+        throw new Exception(ErrorCodes::ACCESS_DENIED, 'Operation is not allowed', null, null, false);
     }
 
     protected function getAllResponse($data)

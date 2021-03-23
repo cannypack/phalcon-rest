@@ -5,6 +5,8 @@ namespace PhalconRest\Data\Query\QueryParsers;
 use PhalconRest\Data\Query;
 use PhalconRest\Data\Query\Condition;
 use PhalconRest\Data\Query\Sorter;
+use PhalconRest\Constants\ErrorCodes;
+use PhalconRest\Exception;
 
 class UrlQueryParser
 {
@@ -29,6 +31,8 @@ class UrlQueryParser
     const SORT_ASCENDING = 1;
     const SORT_DESCENDING = -1;
 
+    const FIELD_NAME_REGEX = '/[^.0-1a-zA-Z_]/';
+
     protected $enabledFeatures = [ self::FIELDS, self::OFFSET, self::LIMIT, self::HAVING, self::WHERE, self::SORT, self::EXCLUDES ];
 
 
@@ -47,6 +51,7 @@ class UrlQueryParser
         $excludes = $this->isEnabled(self::EXCLUDES) ? $this->extractCommaSeparatedValues($params, 'exclude') : null;
         
         if ($fields) {
+            $this->validateFields($fields);
             $query->addManyFields($fields);
         }
 
@@ -63,6 +68,7 @@ class UrlQueryParser
         }
 
         if ($having) {
+            $this->validateFields(array_keys($having));
 
             foreach ($having as $field => $value) {
 
@@ -71,6 +77,7 @@ class UrlQueryParser
         }
 
         if ($where) {
+            $this->validateFields(array_keys($where));
 
             foreach ($where as $field => $condition) {
 
@@ -89,6 +96,7 @@ class UrlQueryParser
         if ($or) {
 
             foreach ($or as $where) {
+                $this->validateFields(array_keys($where));
 
                 foreach ($where as $field => $conditions) {
 
@@ -105,6 +113,7 @@ class UrlQueryParser
         }
 
         if ($in) {
+            $this->validateFields(array_keys($in));
 
             foreach ($in as $field => $values) {
 
@@ -117,6 +126,7 @@ class UrlQueryParser
         }
 
         if ($sort) {
+            $this->validateFields(array_keys($sort));
 
             foreach ($sort as $field => $rawDirection) {
 
@@ -236,5 +246,18 @@ class UrlQueryParser
         }
 
         return null;
+    }
+
+    private function validateFields($fields)
+    {
+        foreach ($fields as $field) {
+            if (preg_match(self::FIELD_NAME_REGEX, $field)) {
+                throw new Exception(
+                        ErrorCodes::GENERAL_INVALID_QUERY,
+                        null,
+                        sprintf('Query field: %s', $field)
+                    );
+            }
+        }
     }
 }

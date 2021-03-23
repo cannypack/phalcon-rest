@@ -24,6 +24,11 @@ class ErrorHelper
             'message' => 'General: Not Found'
         ],
 
+        ErrorCodes::GENERAL_INVALID_QUERY => [
+            'statusCode' => 400,
+            'message' => 'General: Invalid query'
+        ],
+
         // Authentication
         ErrorCodes::AUTH_INVALID_ACCOUNT_TYPE => [
             'statusCode' => 400,

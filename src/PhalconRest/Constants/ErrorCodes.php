@@ -8,6 +8,7 @@ class ErrorCodes
     const GENERAL_SYSTEM = 1010;
     const GENERAL_NOT_IMPLEMENTED = 1020;
     const GENERAL_NOT_FOUND = 1030;
+    const GENERAL_INVALID_QUERY = 1040;
 
     // Authentication
     const AUTH_INVALID_ACCOUNT_TYPE = 2010;

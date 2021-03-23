@@ -51,7 +51,7 @@ class UrlQueryParser
         $excludes = $this->isEnabled(self::EXCLUDES) ? $this->extractCommaSeparatedValues($params, 'exclude') : null;
         
         if ($fields) {
-            $this->validateFileds($fields);
+            $this->validateFields($fields);
             $query->addManyFields($fields);
         }
 
@@ -68,7 +68,7 @@ class UrlQueryParser
         }
 
         if ($having) {
-            $this->validateFileds(array_keys($having));
+            $this->validateFields(array_keys($having));
 
             foreach ($having as $field => $value) {
 
@@ -77,7 +77,7 @@ class UrlQueryParser
         }
 
         if ($where) {
-            $this->validateFileds(array_keys($where));
+            $this->validateFields(array_keys($where));
 
             foreach ($where as $field => $condition) {
 
@@ -96,7 +96,7 @@ class UrlQueryParser
         if ($or) {
 
             foreach ($or as $where) {
-                $this->validateFileds(array_keys($where));
+                $this->validateFields(array_keys($where));
 
                 foreach ($where as $field => $conditions) {
 
@@ -113,7 +113,7 @@ class UrlQueryParser
         }
 
         if ($in) {
-            $this->validateFileds(array_keys($in));
+            $this->validateFields(array_keys($in));
 
             foreach ($in as $field => $values) {
 
@@ -126,7 +126,7 @@ class UrlQueryParser
         }
 
         if ($sort) {
-            $this->validateFileds(array_keys($sort));
+            $this->validateFields(array_keys($sort));
 
             foreach ($sort as $field => $rawDirection) {
 
@@ -248,7 +248,7 @@ class UrlQueryParser
         return null;
     }
 
-    private function validateFileds($fields)
+    private function validateFields($fields)
     {
         foreach ($fields as $field) {
             if (preg_match(self::FIELD_NAME_REGEX, $field)) {

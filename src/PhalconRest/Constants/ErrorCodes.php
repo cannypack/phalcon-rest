@@ -4,6 +4,9 @@ namespace PhalconRest\Constants;
 
 class ErrorCodes
 {
+    // HTTP generic
+    const HTTP_TOO_MANY_REQUESTS = 429;
+
     // General
     const GENERAL_SYSTEM = 1010;
     const GENERAL_NOT_IMPLEMENTED = 1020;

@@ -8,6 +8,12 @@ class ErrorHelper
 {
     protected $errors = [
 
+        // HTTP generic
+        ErrorCodes::HTTP_TOO_MANY_REQUESTS => [
+            'statusCode' => 429,
+            'message' => 'Too Many Requests'
+        ],
+
         // General
         ErrorCodes::GENERAL_SYSTEM => [
             'statusCode' => 500,

@@ -34,4 +34,16 @@ interface AccountType
      * @return bool Authentication successful
      */
     public function authenticateToken($identity, $token);
+
+    /**
+     * @return int Expiration time of sessions
+     */
+    public function getSessionDuration();
+
+    /**
+     * @param int $time Expiration time of sessions
+     *
+     * @return void
+     */
+    public function setSessionDuration($time)
 }

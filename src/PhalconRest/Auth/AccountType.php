@@ -45,5 +45,5 @@ interface AccountType
      *
      * @return void
      */
-    public function setSessionDuration($time)
+    public function setSessionDuration($time);
 }

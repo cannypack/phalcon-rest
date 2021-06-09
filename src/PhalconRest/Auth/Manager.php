@@ -8,6 +8,7 @@ class Manager extends \PhalconRest\Mvc\Plugin
 {
     const LOGIN_DATA_USERNAME = "username";
     const LOGIN_DATA_PASSWORD = "password";
+    const LOGIN_DATA_SESSION_DURATION = "sessionDuration";
 
     /**
      * @var AccountType[] Account types
@@ -121,9 +122,13 @@ class Manager extends \PhalconRest\Mvc\Plugin
             throw new Exception(ErrorCodes::AUTH_LOGIN_FAILED, null, null, null, false);
         }
 
-        $startTime = time();
+        $startTime = $endTime = time();
+        $endTime +=
+            $data[self::LOGIN_DATA_SESSION_DURATION] ??
+            $account->getSessionDuration() ??
+            $this->sessionDuration;
 
-        $session = new Session($accountTypeName, $identity, $startTime, $startTime + $this->sessionDuration);
+        $session = new Session($accountTypeName, $identity, $startTime, $endTime);
         $token = $this->tokenParser->getToken($session);
         $session->setToken($token);
 

@@ -45,6 +45,14 @@ class PhqlQueryParser extends Plugin
         $from = $builder->getFrom();
         $fromString = is_array($from) ? array_keys($from)[0] : $from;
 
+        $resourceClass = $resource->getModel();
+        $modelManager = (new $resourceClass)->getModelsManager();
+        $relations = $modelManager->getRelations($resourceClass);
+        $relations = array_reduce($relations, function ($acc, $relation) {
+            $acc[$relation->getOptions()['alias']] = $relation;
+            return $acc;
+        }, []);
+
         if ($query->hasFields()) {
 
             $builder->columns($query->getFields());
@@ -93,7 +101,30 @@ class PhqlQueryParser extends Plugin
 
                 $format = $this->getConditionFormat($operator);
                 $valuesReplacementString = $this->getValuesReplacementString($parsedValues, $conditionIndex);
-                $fieldString = sprintf('[%s].[%s]', $fromString, $condition->getField());
+
+                // Assume condition on join if field looks like subEntity.someAttr
+                $field = $condition->getField();
+                if (str_contains($field, '.')) {
+                    $fieldString = $field;
+
+                    $fieldParts = explode('.', $field);
+                    $fieldModel = $fieldParts[0];
+                    if (!isset($relations[$fieldModel])) {
+                        throw new \Exception('Cannot use where on unrelated "' . $fieldModel . '"');
+                    }
+
+                    $hasJoin = in_array($fieldModel, array_column($builder->getJoins(), 2));
+                    if (!$hasJoin) {
+                        $relation = $relations[$fieldModel];
+                        $builder->join(
+                            $relation->getReferencedModel(),
+                            "{$from}.{$relation->getFields()} = {$fieldModel}.{$relation->getReferencedFields()}",
+                            $fieldModel
+                        );
+                    }
+                } else {
+                    $fieldString = sprintf('[%s].[%s]', $fromString, $field);
+                }
 
                 $conditionString = sprintf($format, $fieldString, $operator, $valuesReplacementString);
 

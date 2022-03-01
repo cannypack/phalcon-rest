@@ -491,6 +491,11 @@ class CrudResourceController extends ResourceController
      */
     protected function updateItem(Model $item, $data)
     {
+        // Make sure the ID present in the incoming data is the same as the ID in the model
+        if (!empty($data['id']) && $item->id !== $data['id']) {
+            throw new Exception(ErrorCodes::DATA_FAILED, 'Inconsistent ID', null, null, false);
+        }
+
         $this->beforeAssignData($item, $data);
         $item->assign($data, null, $this->whitelistUpdate());
         $this->afterAssignData($item, $data);

@@ -151,7 +151,7 @@ class CrudResourceController extends ResourceController
 
     protected function onItemNotFound($id)
     {
-        throw new Exception(ErrorCodes::DATA_NOT_FOUND, 'Item was not found', ['id' => $id]);
+        throw new Exception(ErrorCodes::DATA_NOT_FOUND, 'Item was not found', ['id' => $id], null, false);
     }
 
     protected function findAllowed($id, $item)

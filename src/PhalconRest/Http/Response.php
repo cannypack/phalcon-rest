@@ -60,7 +60,7 @@ class Response extends \Phalcon\Http\Response
 
     public function setJsonContent($content, $jsonOptions = 0, $depth = 512)
     {
-        parent::setJsonContent($content, $jsonOptions, $depth);
+        parent::setJsonContent($content, $jsonOptions | JSON_UNESCAPED_UNICODE, $depth);
 
         $this->setContentType('application/json', 'UTF-8');
         $this->setHeader('E-Tag', md5($this->getContent()));
